@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👾</text></svg>"
+    />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Free & Unlimited Image Hosting</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.3/css/bootstrap.min.css"
+    />
+    <style>
+      @media (max-width: 600px) {
+        .container {
+          margin: 20px auto;
+          padding: 10px;
+        }
+
+        .upload-btn-wrapper {
+          padding: 5px 15px;
+        }
+
+        h3 {
+          font-size: 1.4em;
+        }
+
+        p {
+          font-size: 0.875em;
+          line-height: 1.5;
+        }
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f9fa;
+        line-height: 1.5;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 550px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+
+      .upload-btn-wrapper {
+        position: relative;
+        overflow: hidden;
+        display: inline-block;
+        background-color: #007bff;
+        color: #fff;
+        border-radius: 5px;
+        padding: 10px 25px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .upload-btn-wrapper:hover {
+        background-color: #0056b3;
+      }
+
+      .upload-btn-wrapper input[type="file"] {
+        font-size: 100px;
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: 0;
+      }
+
+      .cloudflare-logo {
+        width: 20px;
+        height: 20px;
+        vertical-align: middle;
+        fill: #f16d19;
+      }
+
+      .cloudflare-name {
+        color: #f16d19;
+      }
+
+      .powered-by {
+        font-size: 0.875em;
+        color: gray;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      class="container"
+      ondragover="event.preventDefault()"
+      ondrop="handleDrop(event)"
+    >
+      <h3 class="text-center">👾 Unlimited Image Hosting</h3>
+      <p class="text-center text-muted">
+        Host your images for free and share them anywhere!
+      </p>
+      <br />
+      <div class="upload-btn-wrapper text-center">
+        <span class="upload-btn">Upload an Image</span>
+        <input
+          type="file"
+          name="file"
+          id="fileInput"
+          accept="image/png, image/jpeg, image/jpg, image/gif"
+        />
+      </div>
+      <div id="uploadStatus" style="margin-top: 20px"></div>
+      <p class="powered-by">
+        Powered by
+        <a href="https://cloudflare.com" target="_blank" class="cloudflare-name"
+          >Cloudflare</a
+        >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 640 512"
+          class="cloudflare-logo"
+        >
+          <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+          <path
+            d="M407.9 319.9l-230.8-2.9a4.6 4.6 0 0 1 -3.6-1.9 4.6 4.6 0 0 1 -.5-4.1 6.1 6.1 0 0 1 5.4-4.1L411.3 303.9c27.6-1.3 57.5-23.6 68-50.8l13.3-34.5a7.9 7.9 0 0 0 .5-2.9 7.7 7.7 0 0 0 -.2-1.6A151.9 151.9 0 0 0 201.3 198.4 68.1 68.1 0 0 0 94.2 269.6C41.9 271.1 0 313.7 0 366.1a96.1 96.1 0 0 0 1 14 4.5 4.5 0 0 0 4.4 3.9l426.1 .1c0 0 .1 0 .1 0a5.6 5.6 0 0 0 5.3-4l3.3-11.3c3.9-13.4 2.4-25.8-4.1-34.9C430.1 325.4 420.1 320.5 407.9 319.9zM513.9 221.1c-2.1 0-4.3 .1-6.4 .2a3.8 3.8 0 0 0 -3.3 2.7l-9.1 31.2c-3.9 13.4-2.4 25.8 4.1 34.9 6 8.4 16.1 13.3 28.2 13.9l49.2 2.9a4.5 4.5 0 0 1 3.5 1.9 4.6 4.6 0 0 1 .5 4.2 6.2 6.2 0 0 1 -5.4 4.1l-51.1 2.9c-27.8 1.3-57.7 23.6-68.1 50.8l-3.7 9.6a2.7 2.7 0 0 0 2.4 3.7c0 0 .1 0 .1 0h175.9a4.7 4.7 0 0 0 4.5-3.4 124.8 124.8 0 0 0 4.7-34C640 277.3 583.5 221.1 513.9 221.1z"
+          />
+        </svg>
+      </p>
+    </div>
+
+    <script>
+      const fileInput = document.getElementById("fileInput");
+      const uploadStatus = document.getElementById("uploadStatus");
+
+      function handleDrop(event) {
+        event.preventDefault();
+        let files = event.dataTransfer.files;
+        for (let i = 0; i < files.length; i++) {
+          uploadImage(files[i]);
+        }
+      }
+
+      document.addEventListener("paste", (event) => {
+        const items = (event.clipboardData || event.originalEvent.clipboardData)
+          .items;
+        for (let index in items) {
+          const item = items[index];
+          if (item.kind === "file") {
+            const blob = item.getAsFile();
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              const base64Data = event.target.result.split(",")[1];
+              const data = window.atob(base64Data);
+              const ia = new Uint8Array(data.length);
+              for (let i = 0; i < data.length; i++) {
+                ia[i] = data.charCodeAt(i);
+              }
+              const blob = new Blob([ia.buffer], { type: "image/jpeg" });
+              const file = new File([blob], "screenshot.jpg");
+              uploadImage(file);
+            };
+            reader.readAsDataURL(blob);
+          }
+        }
+      });
+
+      fileInput.addEventListener("change", () => {
+        const file = fileInput.files[0];
+        if (file) {
+          uploadImage(file);
+        }
+      });
+
+      const uploadImage = (file) => {
+        const formData = new FormData();
+        formData.append("file", file);
+
+        document.querySelector(".upload-btn").textContent = "Uploading...";
+
+        fetch("/upload", { method: "POST", body: formData })
+          .then((response) => response.json())
+          .then((data) => {
+            const src = window.location.origin + data[0].src;
+            uploadStatus.innerHTML = `
+                <div class="alert alert-success">Upload successful! 🥳</div>
+                <div class="input-group">
+                  <input type="text" class="form-control" id="imageUrl" value="${src}">
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-secondary copy-btn" type="button" onclick="copyImageUrl()">Copy URL</button>
+                  </div>
+                </div>
+                <br />
+                <img src="${src}" class="img-fluid mb-3" alt="Uploaded Image">
+            `;
+          })
+          .catch((error) => {
+            uploadStatus.innerHTML =
+              '<div class="alert alert-danger">Upload failed. Please try again.</div>';
+          })
+          .finally(() => {
+            document.querySelector(".upload-btn").textContent =
+              "Upload an Image";
+          });
+      };
+
+      const copyImageUrl = () => {
+        const imageUrl = document.getElementById("imageUrl");
+        imageUrl.select();
+        document.execCommand("copy");
+        document.querySelector(".copy-btn").textContent = "✨ Copied";
+        setTimeout(() => {
+          document.querySelector(".copy-btn").textContent = "Copy URL";
+        }, 1000);
+      };
+    </script>
+  </body>
+</html>
