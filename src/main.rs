@@ -7,7 +7,7 @@ use axum::{
     Router,
 };
 use reqwest::multipart as reqwest_multipart;
-use std::net::SocketAddr;
+use std::{net::SocketAddr, str::FromStr};
 use tower_http::trace::{self, TraceLayer};
 use tracing::Level;
 use tracing_appender;
@@ -83,10 +83,22 @@ async fn file(Path(file_name): Path<String>) -> impl IntoResponse {
         .send()
         .await
     {
-        Ok(response) => match response.bytes().await {
-            Ok(bytes) => bytes.into_response(),
-            Err(_) => StatusCode::INTERNAL_SERVER_ERROR.into_response(),
-        },
+        Ok(response) => convert(response).await.into_response(),
         Err(_) => StatusCode::INTERNAL_SERVER_ERROR.into_response(),
     }
+}
+
+async fn convert(response: reqwest::Response) -> impl IntoResponse {
+    // clone everything from reqwest response to axum response
+    let header = response.headers().clone();
+    // generate a new response
+    let mut axum_response = response.bytes().await.unwrap().into_response();
+    for (key, value) in header.iter() {
+        if let Ok(axum_value) = axum::http::HeaderValue::from_bytes(value.as_bytes()) {
+            if let Ok(axum_key) = axum::http::header::HeaderName::from_str(key.as_str()) {
+                axum_response.headers_mut().insert(axum_key, axum_value);
+            }
+        }
+    }
+    axum_response
 }
